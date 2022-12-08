@@ -9,3 +9,4 @@ else:
     for i in range(1, argc):
         result += int(argv[i])
     print("{:d}".format(result))
+    
