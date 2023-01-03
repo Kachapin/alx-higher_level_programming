@@ -1,7 +1,7 @@
+#!/usr/bin/python3
+import sys
+
 def is_safe(board, row, col, N):
-    '''
-    Check if it is safe to place a queen at the given position.
-    '''
     # Check for attacks from queens in the same column
     for i in range(row):
         if board[i][col] == 1:
@@ -26,9 +26,6 @@ def is_safe(board, row, col, N):
     return True
 
 def solve_nqueens(board, row, N):
-    '''
-    Recursively solve the N queens problem by placing queens in each column of the current row.
-    '''
     # Base case: if all rows have been placed, print the solution
     if row == N:
         for i in range(N):
@@ -46,16 +43,22 @@ def solve_nqueens(board, row, N):
             board[row][col] = 0
 
 def main():
-    '''
-    Read the value of N from user input and solve the N queens problem.
-    '''
-    # Read the value of N from user input
-    N = int(input("Enter the value of N: "))
+    # Check for the correct number of arguments
+    if len(sys.argv) != 2:
+        print("Usage: nqueens N")
+        sys.exit(1)
+    
+    # Check if N is an integer
+    try:
+        N = int(sys.argv[1])
+    except ValueError:
+        print("N must be a number")
+        sys.exit(1)
     
     # Check if N is at least 4
     if N < 4:
         print("N must be at least 4")
-        return
+        sys.exit(1)
     
     # Initialize the board with all zeros
     board = [[0 for _ in range(N)] for _ in range(N)]
