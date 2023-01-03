@@ -1,107 +1,67 @@
-#!/usr/bin/python3
-"""
-
-This module contains an algorithm that resolves the N-Queen puzzle
-using backtracking
-
-"""
-
-
-def isSafe(m_queen, nqueen):
-    """ Method that determines if the queens can or can't kill each other
-
-    Args:
-        m_queen: array that has the queens positions
-        nqueen: queen number
-
-    Returns:
-        True: when queens can't kill each other
-        False: when some of the queens can kill
-
-    """
-
-    for i in range(nqueen):
-
-        if m_queen[i] == m_queen[nqueen]:
+def is_safe(board, row, col, N):
+    '''
+    Check if it is safe to place a queen at the given position.
+    '''
+    # Check for attacks from queens in the same column
+    for i in range(row):
+        if board[i][col] == 1:
             return False
-
-        if abs(m_queen[i] - m_queen[nqueen]) == abs(i - nqueen):
+    
+    # Check for attacks from queens in the top-left diagonal
+    i, j = row, col
+    while i >= 0 and j >= 0:
+        if board[i][j] == 1:
             return False
-
+        i -= 1
+        j -= 1
+    
+    # Check for attacks from queens in the top-right diagonal
+    i, j = row, col
+    while i >= 0 and j < N:
+        if board[i][j] == 1:
+            return False
+        i -= 1
+        j += 1
+    
     return True
 
-
-def print_result(m_queen, nqueen):
-    """ Method that prints the list with the Queens positions
-
-    Args:
-        m_queen: array that has the queens positions
-        nqueen: queen number
-
-    """
-
-    res = []
-
-    for i in range(nqueen):
-        res.append([i, m_queen[i]])
-
-    print(res)
-
-
-def Queen(m_queen, nqueen):
-    """ Recursive function that executes the Backtracking algorithm
-
-    Args:
-        m_queen: array that has the queens positions
-        nqueen: queen number
-
-    """
-
-    if nqueen is len(m_queen):
-        print_result(m_queen, nqueen)
+def solve_nqueens(board, row, N):
+    '''
+    Recursively solve the N queens problem by placing queens in each column of the current row.
+    '''
+    # Base case: if all rows have been placed, print the solution
+    if row == N:
+        for i in range(N):
+            for j in range(N):
+                print(board[i][j], end=' ')
+            print()
         return
+    
+    # Try placing a queen in each column of the current row
+    for col in range(N):
+        if is_safe(board, row, col, N):
+            board[row][col] = 1
+            solve_nqueens(board, row+1, N)
+            # Backtrack and try a different column
+            board[row][col] = 0
 
-    m_queen[nqueen] = -1
-
-    while((m_queen[nqueen] < len(m_queen) - 1)):
-
-        m_queen[nqueen] += 1
-
-        if isSafe(m_queen, nqueen) is True:
-
-            if nqueen is not len(m_queen):
-                Queen(m_queen, nqueen + 1)
-
-
-def solveNQueen(size):
-    """ Function that invokes the Backtracking algorithm
-
-    Args:
-        size: size of the chessboard
-        
-    """
-
-    m_queen = [-1 for i in range(size)]
-
-    Queen(m_queen, 0)
-
+def main():
+    '''
+    Read the value of N from user input and solve the N queens problem.
+    '''
+    # Read the value of N from user input
+    N = int(input("Enter the value of N: "))
+    
+    # Check if N is at least 4
+    if N < 4:
+        print("N must be at least 4")
+        return
+    
+    # Initialize the board with all zeros
+    board = [[0 for _ in range(N)] for _ in range(N)]
+    
+    # Solve the N queens problem
+    solve_nqueens(board, 0, N)
 
 if __name__ == '__main__':
-
-    import sys
-
-    if len(sys.argv) == 1 or len(sys.argv) > 2:
-        print("Usage: nqueens N")
-        sys.exit(1)
-
-    try:
-        size = int(sys.argv[1])
-    except:
-        print("N must be a number")
-        sys.exit(1)
-
-    if size < 4:
-        print("N must be at least 4")
-        sys.exit(1)
-
-    solveNQueen(size)
+    main()
