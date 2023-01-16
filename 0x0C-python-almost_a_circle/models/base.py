@@ -89,7 +89,7 @@ class Base:
                 for i in list_objs:
                     writer.writerow(i.to_dictionary())
 
-   @classmethod
+    @classmethod
     def load_from_file_csv(cls):
         """Return a list"""
         filename = cls.__name__ + ".csv"
